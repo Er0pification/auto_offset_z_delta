@@ -8,11 +8,11 @@
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
 
-#from . import probe
+from . import probe
 import math
 
 class AutoOffsetZCalibration:
-    def __init__(self, config):
+    def __init__(self, helper, config):
         self.printer = config.get_printer()
         x_pos_center, y_pos_center = config.getfloatlist("center_xy_position", count=2)
         x_pos_endstop, y_pos_endstop = config.getfloatlist("endstop_xy_position", count=2)
