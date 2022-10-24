@@ -12,7 +12,7 @@ from . import probe
 import math
 
 class AutoOffsetZCalibration:
-    def __init__(self, helper, config):
+    def __init__(self, config):
         self.printer = config.get_printer()
         x_pos_center, y_pos_center = config.getfloatlist("center_xy_position", count=2)
         x_pos_endstop, y_pos_endstop = config.getfloatlist("endstop_xy_position", count=2)
@@ -81,7 +81,10 @@ class AutoOffsetZCalibration:
             return math.floor(expoN) / 10 ** decimals
         return math.ceil(expoN) / 10 ** decimals
 
-    def cmd_AUTO_OFFSET_Z(self, gcmd):
+    def cmd_AUTO_OFFSET_Z(self, helper, gcmd):
+        self.helper = helper
+        self.gcmd = gcmd
+        self.gcode = helper.gcode
         # check if all axes are homed
         toolhead = self.printer.lookup_object('toolhead')
         curtime = self.printer.get_reactor().monotonic()
