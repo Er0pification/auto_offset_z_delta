@@ -33,6 +33,9 @@ class AutoOffsetZCalibration:
         self.gcode = self.printer.lookup_object('gcode')
         self.gcode_move = self.printer.lookup_object('gcode_move')
         self.gcode.register_command("AUTO_OFFSET_Z", self.cmd_AUTO_OFFSET_Z, desc=self.cmd_AUTO_OFFSET_Z_help)
+        self.start_gcode = gcode_macro.load_template(config, 'start_gcode', '')
+        self.switch_gcode = gcode_macro.load_template(config,'before_switch_gcode','')
+        self.end_gcode = gcode_macro.load_template(config, 'end_gcode', '')
 
         # check if a bltouch is installed
         if config.has_section("bltouch"):
@@ -127,6 +130,19 @@ class AutoOffsetZCalibration:
                                                       {'Z': 0})
         self.gcode_move.cmd_SET_GCODE_OFFSET(gcmd_offset)
 
+        self.helper.start_gcode.run_gcode_from_command()
+
+         # Move with probe or bltouch to endstop XY position and test surface z position
+        gcmd.respond_info("AutoOffsetZ: Probing nozzle ...")
+        toolhead.manual_move([self.endstop_x_pos, self.endstop_y_pos], self.speed)
+        znozzle = self.printer.lookup_object('probe').run_probe(gcmd)
+        # Perform Z Hop
+        if self.z_hop:
+            toolhead.manual_move([None, None, self.z_hop], self.z_hop_speed)
+
+        #attach probe, if needed
+        self.helper.switch_gcode.run_gcode_from_command()
+
         # Move with probe or bltouch to endstop XY position and test surface z position
         gcmd.respond_info("AutoOffsetZ: Probing endstop ...")
         toolhead.manual_move([self.endstop_x_pos - self.x_offset, self.endstop_y_pos - self.y_offset], self.speed)
@@ -143,13 +159,15 @@ class AutoOffsetZCalibration:
         if self.z_hop:
             toolhead.manual_move([None, None, self.z_hop], self.z_hop_speed)
 
+        self.helper.end_gcode.run_gcode_from_command()
+
         # calcualtion offset
         endstopswitch = 0.5
         diffbedendstop = zendstop[2] - zbed[2]
         #offset = (0 - diffbedendstop  + endstopswitch) + self.offsetadjust
         offset = self.rounding((0 - diffbedendstop  + endstopswitch) + self.offsetadjust,3)
 
-        gcmd.respond_info("AutoOffsetZ:\nBed: %.3f\nEndstop: %.3f\nDiff: %.3f\nManual Adjust: %.3f\nTotal Calculated Offset: %.3f" % (zbed[2],zendstop[2],diffbedendstop,self.offsetadjust,offset,))
+        gcmd.respond_info("AutoOffsetZ:\nNozzle: %.3f\nBed: %.3f\nEndstop: %.3f\nDiff: %.3f\nManual Adjust: %.3f\nTotal Calculated Offset: %.3f" % (znozzle[2],zbed[2],zendstop[2],diffbedendstop,self.offsetadjust,offset,))
 
         # failsave
         if offset < self.offset_min or offset > self.offset_max:

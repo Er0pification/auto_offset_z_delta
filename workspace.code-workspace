@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "../speeduino"
+		},
+		{
+			"path": "../../PlatformIO/Projects/Lambda-Shield-2-Example"
+		},
+		{
+			"name": "ETB_1.1",
+			"path": "../../PlatformIO/Projects/ETB_1.1"
+		},
+		{
+			"name": "Cj125_platformio",
+			"path": "../../PlatformIO/Projects/Lambda-Shield-2-Example/Cj125_platformio"
+		},
+		{
+			"name": "Marlin",
+			"path": "../../PlatformIO/Projects/Marlin"
+		},
+		{
+			"path": "../../PlatformIO/Projects/MarlinKossel"
+		}
+	],
+	"settings": {}
+}
