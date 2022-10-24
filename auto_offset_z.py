@@ -33,6 +33,7 @@ class AutoOffsetZCalibration:
         self.gcode = self.printer.lookup_object('gcode')
         self.gcode_move = self.printer.lookup_object('gcode_move')
         self.gcode.register_command("AUTO_OFFSET_Z", self.cmd_AUTO_OFFSET_Z, desc=self.cmd_AUTO_OFFSET_Z_help)
+        gcode_macro = self.printer.load_object(config, 'gcode_macro')
         self.start_gcode = gcode_macro.load_template(config, 'start_gcode', '')
         self.switch_gcode = gcode_macro.load_template(config,'before_switch_gcode','')
         self.end_gcode = gcode_macro.load_template(config, 'end_gcode', '')
