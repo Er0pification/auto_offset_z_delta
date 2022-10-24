@@ -12,13 +12,13 @@ else
    echo "Klipper detected - let's go ..."
 fi
 
-if [ ! -d ~/auto_offset_z ]; then
+if [ ! -d ~/auto_offset_z_delta ]; then
    echo -e "AUTO_OFFSET_Z is missing - aborting ..."
    exit 1
 else
    echo -e "AUTO_OFFSET_Z - let's go ..."
    rm -f ~/klipper/klippy/extras/auto_offset_z.py 2>&1>/dev/null
-   ln -s ~/auto_offset_z/auto_offset_z.py ~/klipper/klippy/extras/auto_offset_z.py
+   ln -s ~/auto_offset_z_delta/auto_offset_z.py ~/klipper/klippy/extras/auto_offset_z.py
    sudo /bin/sh -c "cat > /etc/systemd/system/auto_offset_z.service" << EOF
 [Unit]
 Description=Dummy Service for auto_offset_z plugin
