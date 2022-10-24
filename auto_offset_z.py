@@ -81,10 +81,7 @@ class AutoOffsetZCalibration:
             return math.floor(expoN) / 10 ** decimals
         return math.ceil(expoN) / 10 ** decimals
 
-    def cmd_AUTO_OFFSET_Z(self, helper, gcmd):
-        self.helper = helper
-        self.gcmd = gcmd
-        self.gcode = helper.gcode
+    def cmd_AUTO_OFFSET_Z(self, gcmd):
         # check if all axes are homed
         toolhead = self.printer.lookup_object('toolhead')
         curtime = self.printer.get_reactor().monotonic()
@@ -134,7 +131,7 @@ class AutoOffsetZCalibration:
                                                       {'Z': 0})
         self.gcode_move.cmd_SET_GCODE_OFFSET(gcmd_offset)
 
-        self.helper.start_gcode.run_gcode_from_command()
+        self.start_gcode.run_gcode_from_command()
 
          # Move with probe or bltouch to endstop XY position and test surface z position
         gcmd.respond_info("AutoOffsetZ: Probing nozzle ...")
@@ -145,7 +142,7 @@ class AutoOffsetZCalibration:
             toolhead.manual_move([None, None, self.z_hop], self.z_hop_speed)
 
         #attach probe, if needed
-        self.helper.switch_gcode.run_gcode_from_command()
+        self.switch_gcode.run_gcode_from_command()
 
         # Move with probe or bltouch to endstop XY position and test surface z position
         gcmd.respond_info("AutoOffsetZ: Probing endstop ...")
@@ -163,7 +160,7 @@ class AutoOffsetZCalibration:
         if self.z_hop:
             toolhead.manual_move([None, None, self.z_hop], self.z_hop_speed)
 
-        self.helper.end_gcode.run_gcode_from_command()
+        self.end_gcode.run_gcode_from_command()
 
         # calcualtion offset
         endstopswitch = 0.5
