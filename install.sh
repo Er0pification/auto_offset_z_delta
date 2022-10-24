@@ -12,7 +12,7 @@ else
    echo "Klipper detected - let's go ..."
 fi
 
-if [ ! -d ~/auto_offset_z ]; then
+if [ ! -d ~/auto_offset_z_delta ]; then
    echo -e "AUTO_OFFSET_Z is missing - aborting ..."
    exit 1
 else
