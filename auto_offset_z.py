@@ -163,10 +163,11 @@ class AutoOffsetZCalibration:
         self.end_gcode.run_gcode_from_command()
 
         # calcualtion offset
-        endstopswitch = 0.5
-        diffbedendstop = zendstop[2] - zbed[2]
+        #endstopswitch = 0.5
+        diffbedendstop = zendstop[2] - znozzle[2] - zbed[2]
         #offset = (0 - diffbedendstop  + endstopswitch) + self.offsetadjust
-        offset = self.rounding((0 - diffbedendstop  + endstopswitch) + self.offsetadjust,3)
+        #offset = self.rounding((0 - diffbedendstop  + endstopswitch) + self.offsetadjust,3)
+        offset = self.rounding((0 - diffbedendstop) + self.offsetadjust,3)
 
         gcmd.respond_info("AutoOffsetZ:\nNozzle: %.3f\nBed: %.3f\nEndstop: %.3f\nDiff: %.3f\nManual Adjust: %.3f\nTotal Calculated Offset: %.3f" % (znozzle[2],zbed[2],zendstop[2],diffbedendstop,self.offsetadjust,offset,))
 
