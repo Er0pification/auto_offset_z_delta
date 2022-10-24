@@ -33,7 +33,7 @@ Login to your pi by ssh. Clone the repo to your homefolder with this command:
 
 <pre><code>
 git clone https://github.com/Er0pification/auto_offset_z_delta.git<br>
-cd ~/auto_offset_z<br>
+cd ~/auto_offset_z_delta<br>
 ./install.sh<br>
 </code></pre>
 
@@ -42,7 +42,7 @@ For further updates you can add it to moonraker's updated manager:
 <pre><code>
 [update_manager auto_offset_z]
 type: git_repo
-path: ~/auto_offset_z
+path: ~/auto_offset_z_delta
 origin: https://github.com/Er0pification/auto_offset_z_delta.git
 install_script: install.sh
 </code></pre>
