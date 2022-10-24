@@ -20,10 +20,10 @@ class AutoOffsetZCalibration:
         self.endstop_x_pos, self.endstop_y_pos = x_pos_endstop, y_pos_endstop
         self.z_hop = config.getfloat("z_hop", default=10.0)
         self.z_hop_speed = config.getfloat('z_hop_speed', 15., above=0.)
-        zconfig = config.getsection('stepper_z')
-        self.max_z = zconfig.getfloat('position_max', note_valid=False)
-        self.ignore_alignment = config.getboolean('ignore_alignment', False)
-        self.endstop_pin = zconfig.get('endstop_pin')
+        #zconfig = config.getsection('stepper_z')
+        #self.max_z = zconfig.getfloat('position_max', note_valid=False)
+        #self.ignore_alignment = config.getboolean('ignore_alignment', False)
+        #self.endstop_pin = zconfig.get('endstop_pin')
         self.speed = config.getfloat('speed', 50.0, above=0.)
         self.offsetadjust = config.getfloat('offsetadjust', 0.0)
         self.offset_min = config.getfloat('offset_min', -1)
@@ -46,8 +46,8 @@ class AutoOffsetZCalibration:
             if ((self.x_offset == 0) and (self.y_offset == 0)):
                 raise config.error("AutoOffsetZ: Check the x and y offset [bltouch] - it seems both are zero and the BLTouch can't be at the same position as the nozzle :-)")
             # check if bltouch is set as endstop
-            if ('virtual_endstop' in self.endstop_pin):
-                raise config.error("AutoOffsetZ: BLTouch can't be used as z endstop with this command - use a physical endstop instead.")
+            #if ('virtual_endstop' in self.endstop_pin):
+                #raise config.error("AutoOffsetZ: BLTouch can't be used as z endstop with this command - use a physical endstop instead.")
 
         # check if a probe is installed
         elif config.has_section("probe"):
@@ -58,20 +58,20 @@ class AutoOffsetZCalibration:
             if ((self.x_offset == 0) and (self.y_offset == 0)):
                 raise config.error("AutoOffsetZ: Check the x and y offset from [probe] - it seems both are 0 and the Probe can't be at the same position as the nozzle :-)")
             # check if probe is set as endstop
-            if ('virtual_endstop' in self.endstop_pin):
-                raise config.error("AutoOffsetZ: Probe can't be used as z endstop - use a physical endstop instead.")
+            #if ('virtual_endstop' in self.endstop_pin):
+                #raise config.error("AutoOffsetZ: Probe can't be used as z endstop - use a physical endstop instead.")
         else:
             raise config.error("AutoOffsetZ: No bltouch or probe in configured in your system - check your setup.")
 
         # check if qgl or ztilt is available
-        if config.has_section("quad_gantry_level"):
-            self.adjusttype = "qgl"
-        elif config.has_section("z_tilt"):
-            self.adjusttype = "ztilt"
-        elif self.ignore_alignment == 1:
-            self.adjusttype = "ignore"
-        else:
-            raise config.error("AutoOffsetZ: This can only be used if your config contains a section [quad_gantry_level] or [z_tilt].")
+        #if config.has_section("quad_gantry_level"):
+            #self.adjusttype = "qgl"
+        #elif config.has_section("z_tilt"):
+            #self.adjusttype = "ztilt"
+        #elif self.ignore_alignment == 1:
+            #self.adjusttype = "ignore"
+        #else:
+            #raise config.error("AutoOffsetZ: This can only be used if your config contains a section [quad_gantry_level] or [z_tilt].")
 
     # custom round operation based mathematically instead of python default cutting off
     def rounding(self,n, decimals=0):
@@ -96,30 +96,30 @@ class AutoOffsetZCalibration:
             'z' not in kin_status['homed_axes']):
             raise gcmd.error("You must home X, Y and Z axes first")
 
-        if self.adjusttype == "qgl":
+        #if self.adjusttype == "qgl":
             # debug output start #
             #gcmd.respond_raw("AutoOffsetZ (Alignment Type): %s" % (self.adjusttype))
             # debug output end #
 
             # check if qgl has applied
-            alignment_status = self.printer.lookup_object('quad_gantry_level').get_status(gcmd)
-            if alignment_status['applied'] != 1:
-                raise gcmd.error("AutoOffsetZ: You have to do a quad gantry level first")
+            #alignment_status = self.printer.lookup_object('quad_gantry_level').get_status(gcmd)
+            #if alignment_status['applied'] != 1:
+                #raise gcmd.error("AutoOffsetZ: You have to do a quad gantry level first")
 
-        elif self.adjusttype == "ztilt":
+        #elif self.adjusttype == "ztilt":
             # debug output start #
             #gcmd.respond_raw("AutoOffsetZ (Alignment Type): %s" % (self.adjusttype))
             # debug output end #
 
             # check if ztilt has applied
-            alignment_status = self.printer.lookup_object('z_tilt').get_status(gcmd)
-            if alignment_status['applied'] != 1:
-                raise gcmd.error("AutoOffsetZ: You have to do a z tilt first")
+            #alignment_status = self.printer.lookup_object('z_tilt').get_status(gcmd)
+            #if alignment_status['applied'] != 1:
+                #raise gcmd.error("AutoOffsetZ: You have to do a z tilt first")
 
-        elif self.adjusttype == "ignore":
-            gcmd.respond_info("AutoOffsetZ: Ignoring alignment as you requested by config ...")
-        else:
-            raise config.error("AutoOffsetZ: Your printer has no config for [quad_gantry_level] or [z_tilt] which is needed to work correctly.")
+        #elif self.adjusttype == "ignore":
+            #gcmd.respond_info("AutoOffsetZ: Ignoring alignment as you requested by config ...")
+        #else:
+            #raise config.error("AutoOffsetZ: Your printer has no config for [quad_gantry_level] or [z_tilt] which is needed to work correctly.")
 
         # debug output start #
         #gcmd.respond_raw("AutoOffsetZ (Alignment Result): %s" % (alignment_status))
