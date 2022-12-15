@@ -97,6 +97,11 @@ class AutoOffsetZCalibration:
             'z' not in kin_status['homed_axes']):
             raise gcmd.error("You must home X, Y and Z axes first")
 
+        #site_attr = gcmd.get("BED_POSITION", None)
+        #if site_attr is not None:
+            # set bed site from BED_POSITION parameter
+            #self.bed_site = self._parse_site("BED_POSITION", site_attr)
+        
         #if self.adjusttype == "qgl":
             # debug output start #
             #gcmd.respond_raw("AutoOffsetZ (Alignment Type): %s" % (self.adjusttype))
